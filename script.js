@@ -33,7 +33,7 @@ const BOOKS = {
     { title:'The World as I See It',                author:'Albert Einstein',                  emoji:'🌌', note:'Einstein on ethics, peace, curiosity.' },
     { title:'Every Heart a Doorway',                author:'Seanan McGuire',                  emoji:'🚪', note:'Portal fantasy after the portal closes.' },
     { title:'The Metamorphosis',                    author:'Franz Kafka',                     emoji:'🪲', note:'Alienation as allegory. Still uncomfortable.' },
-    { title:'The Pearl',                            author:'John Steinbeck',                  emoji:'💎', note:'Parable of greed. Spare and devastating.' },
+    { title:'The Pearl of Lima',                            author:'Jules Verne',                  emoji:'💎', note:'Parable of greed. Spare and devastating.' },
     { title:'Finish What You Start',                author:'Peter Hollins',                   emoji:'🏁', note:'Discipline over motivation. Practical.' },
     { title:'Bhagvad Gita',                         author:'Attributed to Vyasa',             emoji:'🕉️', note:'Duty, action, detachment. Perennially relevant.' },
     { title:'The Last Queen',                       author:'Chitra Banerjee Divakaruni',      emoji:'👑', note:'Rani Jindan — history rendered intimate.' },
