@@ -9,35 +9,35 @@
 ───────────────────────────────────────────── */
 const BOOKS = {
   pristine: [
-    { title:'War and Peace',           author:'Leo Tolstoy',             emoji:'⚔️',  note:'About halfway through — epic in every sense. The Natasha arc hits unexpectedly hard.' },
-    { title:'Anna Karenina',           author:'Leo Tolstoy',             emoji:'🌹',  note:'On the to-do list. Tolstoy clearly has things to say about society.' },
-    { title:'Shadow and Bone',         author:'Leigh Bardugo',           emoji:'🌑',  note:'Just started — the Grishaverse magic system is fascinating.' },
-    { title:'Dreaming Death',          author:'J. Kathleen Cheney',      emoji:'💭',  note:'On the stack — palace intrigue meets psychic detective fiction.' },
+    { title:'War and Peace',     author:'Leo Tolstoy',       emoji:'⚔️', note:'About halfway through — epic in every sense. The Natasha arc hits unexpectedly hard.' },
+    { title:'Anna Karenina',     author:'Leo Tolstoy',       emoji:'🌹', note:'On the to-do list. Tolstoy clearly has things to say about society and suffering.' },
+    { title:'Shadow and Bone',   author:'Leigh Bardugo',     emoji:'🌑', note:'Just started — the Grishaverse magic system is fascinating.' },
+    { title:'Dreaming Death',    author:'J. Kathleen Cheney',emoji:'💭', note:'On the stack — palace intrigue meets psychic detective fiction.' },
   ],
   shabby: [
-    { title:'The Broken Wings',              author:'Kahlil Gibran',           emoji:'🕊️',  note:'Read so many times the spine is faded. Still finds new meaning each time.' },
-    { title:'The Living Corpse',             author:'Leo Tolstoy',             emoji:'🕯️',  note:'Tolstoy at his moral-crisis finest. Dog-eared throughout.' },
-    { title:'The Pearl of Lima',             author:'Jules Verne',             emoji:'🦪',  note:'Underrated Verne — adventure with real emotional stakes.' },
-    { title:'Rich Dad Poor Dad',             author:'Robert Kiyosaki',         emoji:'💰',  note:'Read in college, reread twice since. Changed how I think about systems.' },
-    { title:'The First Twenty Hours',        author:'Josh Kaufman',            emoji:'⏱️',  note:'Gifted to multiple friends. The deconstruction of learning itself.' },
-    { title:'Think and Grow Rich',           author:'Napoleon Hill',           emoji:'🧠',  note:'Classic for a reason. Annotated margins on every page.' },
-    { title:"Alice's Adventures in Wonderland", author:'Lewis Carroll',        emoji:'🐇',  note:'My first "weird" book. Still delights every reread.' },
-    { title:'Our Little Spanish Cousin',     author:'Mary Nixon-Roulet',       emoji:'🇪🇸',  note:'Charming early-century travelogue — a look at a vanished world.' },
-    { title:'To Be Read at Dusk',            author:'Charles Dickens',         emoji:'🌆',  note:'Short and eerie. Perfect rainy afternoon read.' },
-    { title:'The Man Who Was Thursday',      author:'G.K. Chesterton',         emoji:'🎩',  note:'Philosophical thriller that gets stranger and stranger. Loved it.' },
-    { title:'Yesterday House',               author:'Fritz Leiber',            emoji:'🏚️',  note:'Leiber\'s uncanny domestic horror — quietly unsettling.' },
-    { title:'The Blue Germ',                 author:'Maurice Nicoll',          emoji:'🔵',  note:'Forgotten sci-fi gem. Read in one sitting.' },
-    { title:'We Should All Be Feminists',    author:'Chimamanda Ngozi Adichie',emoji:'✊',  note:'Short but essential. Passed around my friend group.' },
-    { title:'Sharp Objects',                 author:'Gillian Flynn',           emoji:'🔪',  note:'Flynn\'s debut is still her most personal. Unnerving and brilliant.' },
-    { title:'Memories of My Melancholy Whores', author:'Gabriel García Márquez',emoji:'🌺', note:'Late GGM, early in style. Melancholy and beautiful as promised.' },
-    { title:'The World as I See It',         author:'Albert Einstein',         emoji:'🌌',  note:'Surprising warmth behind the intellect. Underlines on every page.' },
-    { title:'Every Heart a Doorway',         author:'Seanan McGuire',          emoji:'🚪',  note:'Portal fantasy meets found family. Read in one afternoon.' },
-    { title:'The Metamorphosis',             author:'Franz Kafka',             emoji:'🪲',  note:'Kafka\'s quiet horror of alienation — more relevant every decade.' },
-    { title:'The Pearl',                     author:'John Steinbeck',          emoji:'💎',  note:'Devastating and precise. Every sentence is doing something.' },
-    { title:'Finish What You Start',         author:'Peter Hollins',           emoji:'🏁',  note:'Practical and motivating. Read when stuck on a project.' },
-    { title:'Bhagavad Gita',                 author:'Ancient text',            emoji:'🕉️',  note:'Return to this regularly. Comfort and challenge in equal measure.' },
-    { title:'The Last Queen',                author:'Chitra Banerjee Divakaruni',emoji:'👑', note:'Historical fiction that stayed with me long after finishing.' },
-    { title:'Think Like a Monk',             author:'Jay Shetty',              emoji:'🧘',  note:'Genuinely changed some daily habits. Highlighted half the book.' },
+    { title:'The Broken Wings',                    author:'Kahlil Gibran',                   emoji:'🕊️', note:'Read so many times the spine is faded. Still finds new meaning each time.' },
+    { title:'The Living Corpse',                   author:'Leo Tolstoy',                     emoji:'🕯️', note:'Tolstoy at his moral-crisis finest. Dog-eared throughout.' },
+    { title:'The Pearl of Lima',                   author:'Jules Verne',                     emoji:'🦪', note:'Underrated Verne — adventure with real emotional stakes.' },
+    { title:'Rich Dad Poor Dad',                   author:'Robert Kiyosaki & Sharon Lechter',emoji:'💰', note:'Read in college, reread twice since. Changed how I think about systems.' },
+    { title:'The First Twenty Hours',              author:'Josh Kaufman',                    emoji:'⏱️', note:'Gifted to multiple friends. The deconstruction of learning itself.' },
+    { title:'Think and Grow Rich',                 author:'Napoleon Hill',                   emoji:'🧠', note:'Classic for a reason. Annotated margins on every page.' },
+    { title:"Alice's Adventures in Wonderland",    author:'Lewis Carroll',                   emoji:'🐇', note:'My first "weird" book. Still delights every reread.' },
+    { title:'Our Little Spanish Cousin',           author:'Mary Nixon-Roulet',               emoji:'🇪🇸', note:'Charming early-century travelogue — a look at a vanished world.' },
+    { title:'To Be Read at Dusk',                  author:'Charles Dickens',                 emoji:'🌆', note:'Short and eerie. Perfect rainy afternoon read.' },
+    { title:'The Man Who Was Thursday: A Nightmare',author:'G.K. Chesterton',               emoji:'🎩', note:'Philosophical thriller that gets stranger and stranger. Loved it.' },
+    { title:'Yesterday House',                     author:'Fritz Leiber',                    emoji:'🏚️', note:'Leiber\'s uncanny domestic horror — quietly unsettling.' },
+    { title:'The Blue Germ',                       author:'Maurice Nicoll',                  emoji:'🔵', note:'Forgotten sci-fi gem. Read in one sitting.' },
+    { title:'We Should All Be Feminists',          author:'Chimamanda Ngozi Adichie',        emoji:'✊', note:'Short but essential. Passed around my friend group.' },
+    { title:'Sharp Objects',                       author:'Gillian Flynn',                   emoji:'🔪', note:'Flynn\'s debut is still her most personal. Unnerving and brilliant.' },
+    { title:'Memories of My Melancholy Whores',    author:'Gabriel García Márquez',          emoji:'🌺', note:'Late GGM, early in style. Melancholy and beautiful as promised.' },
+    { title:'The World as I See It',               author:'Albert Einstein',                 emoji:'🌌', note:'Surprising warmth behind the intellect. Underlines on every page.' },
+    { title:'Every Heart a Doorway',               author:'Seanan McGuire',                  emoji:'🚪', note:'Portal fantasy meets found family. Read in one afternoon.' },
+    { title:'The Metamorphosis',                   author:'Franz Kafka',                     emoji:'🪲', note:'Kafka\'s quiet horror of alienation — more relevant every decade.' },
+    { title:'The Pearl',                           author:'John Steinbeck',                  emoji:'💎', note:'Devastating and precise. Every sentence is doing something.' },
+    { title:'Finish What You Start',               author:'Peter Hollins',                   emoji:'🏁', note:'Practical and motivating. Read when stuck on a project.' },
+    { title:'Bhagvad Gita',                        author:'Attributed to Vyasa',             emoji:'🕉️', note:'Return to this regularly. Comfort and challenge in equal measure.' },
+    { title:'The Last Queen',                      author:'Chitra Banerjee Divakaruni',      emoji:'👑', note:'Historical fiction that stayed with me long after finishing.' },
+    { title:'Think Like a Monk',                   author:'Jay Shetty',                      emoji:'🧘', note:'Genuinely changed some daily habits. Highlighted half the book.' },
   ]
 };
 
@@ -254,7 +254,7 @@ function initLibrary(){
       cover.setAttribute('role','button');
       cover.setAttribute('tabindex','0');
       cover.setAttribute('aria-label',book.title+' by '+book.author);
-      cover.innerHTML=`<span class="book-emoji">${book.emoji}</span><span class="book-short">${book.title}</span>`;
+      cover.innerHTML=`<span class="book-emoji">${book.emoji}</span><span class="book-short">${book.title}</span><span class="book-hover-info"><span class="bhi-title">${book.title}</span><span class="bhi-author">${book.author}</span></span>`;
       cover.addEventListener('click',()=>openModal(book,type));
       cover.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openModal(book,type)}});
       grid.appendChild(cover);
