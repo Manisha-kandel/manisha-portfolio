@@ -200,7 +200,7 @@ body.dark .tbl-mug::before{border-color:#5a5048}
    NAVBAR
 ══════════════════════════════════════════════════ */
 .navbar{
-  position:fixed;top:0;left:0;right:0;z-index:100;
+  position:fixed;top:0;left:0;right:0;z-index:500;
   display:flex;align-items:center;gap:1.5rem;
   padding:.85rem 2rem;
   background:rgba(255,255,255,.75);
@@ -594,10 +594,11 @@ body.dark .github-btn{border-color:rgba(255,255,255,.2);color:var(--text-pri)}
     display:none;position:fixed;top:0;left:0;right:0;bottom:0;
     flex-direction:column;justify-content:center;align-items:center;
     gap:1.5rem;
-    background:rgba(255,255,255,.96);backdrop-filter:blur(20px);
-    z-index:200;
+    background:#ffffff;
+    z-index:300;
   }
-  body.dark .nav-list{background:rgba(12,10,8,.96)}
+  body.dark .nav-list{background:#0e0c0a}
+  .burger{display:flex;position:relative;z-index:400}
   .nav-list.open{display:flex}
   .nav-a{font-size:1.1rem}
   .burger{display:flex}
