@@ -1,527 +1,371 @@
 /* ═══════════════════════════════════════════════════════
-   MANISHA KANDEL — PORTFOLIO
-   script.js — 24-Hour Shadow Engine + Interactions
+   MANISHA KANDEL — script.js v2
+   24-Hour Engine · Typed hero · Tabs · Modals · Reveals
 ════════════════════════════════════════════════════════ */
-
 'use strict';
 
-/* ──────────────────────────────────────────────
-   1. 24-HOUR SHADOW ENGINE
-   Maps system local time (0–23h) to:
-   - Sky colors (dawn, day, dusk, night)
-   - Sun/moon orb position (arc across scene)
-   - Leaf warmth in sunlight
-   - Cast light onto the room interior
-   - Stars visibility
-   - Auto light/dark mode
-────────────────────────────────────────────── */
+/* ─────────────────────────────────────────────
+   1. BOOK DATABASE
+───────────────────────────────────────────── */
+const BOOKS = {
+  pristine: [
+    { title:'War and Peace',           author:'Leo Tolstoy',             emoji:'⚔️',  note:'About halfway through — epic in every sense. The Natasha arc hits unexpectedly hard.' },
+    { title:'Anna Karenina',           author:'Leo Tolstoy',             emoji:'🌹',  note:'On the to-do list. Tolstoy clearly has things to say about society.' },
+    { title:'Shadow and Bone',         author:'Leigh Bardugo',           emoji:'🌑',  note:'Just started — the Grishaverse magic system is fascinating.' },
+    { title:'Dreaming Death',          author:'J. Kathleen Cheney',      emoji:'💭',  note:'On the stack — palace intrigue meets psychic detective fiction.' },
+  ],
+  shabby: [
+    { title:'The Broken Wings',              author:'Kahlil Gibran',           emoji:'🕊️',  note:'Read so many times the spine is faded. Still finds new meaning each time.' },
+    { title:'The Living Corpse',             author:'Leo Tolstoy',             emoji:'🕯️',  note:'Tolstoy at his moral-crisis finest. Dog-eared throughout.' },
+    { title:'The Pearl of Lima',             author:'Jules Verne',             emoji:'🦪',  note:'Underrated Verne — adventure with real emotional stakes.' },
+    { title:'Rich Dad Poor Dad',             author:'Robert Kiyosaki',         emoji:'💰',  note:'Read in college, reread twice since. Changed how I think about systems.' },
+    { title:'The First Twenty Hours',        author:'Josh Kaufman',            emoji:'⏱️',  note:'Gifted to multiple friends. The deconstruction of learning itself.' },
+    { title:'Think and Grow Rich',           author:'Napoleon Hill',           emoji:'🧠',  note:'Classic for a reason. Annotated margins on every page.' },
+    { title:"Alice's Adventures in Wonderland", author:'Lewis Carroll',        emoji:'🐇',  note:'My first "weird" book. Still delights every reread.' },
+    { title:'Our Little Spanish Cousin',     author:'Mary Nixon-Roulet',       emoji:'🇪🇸',  note:'Charming early-century travelogue — a look at a vanished world.' },
+    { title:'To Be Read at Dusk',            author:'Charles Dickens',         emoji:'🌆',  note:'Short and eerie. Perfect rainy afternoon read.' },
+    { title:'The Man Who Was Thursday',      author:'G.K. Chesterton',         emoji:'🎩',  note:'Philosophical thriller that gets stranger and stranger. Loved it.' },
+    { title:'Yesterday House',               author:'Fritz Leiber',            emoji:'🏚️',  note:'Leiber\'s uncanny domestic horror — quietly unsettling.' },
+    { title:'The Blue Germ',                 author:'Maurice Nicoll',          emoji:'🔵',  note:'Forgotten sci-fi gem. Read in one sitting.' },
+    { title:'We Should All Be Feminists',    author:'Chimamanda Ngozi Adichie',emoji:'✊',  note:'Short but essential. Passed around my friend group.' },
+    { title:'Sharp Objects',                 author:'Gillian Flynn',           emoji:'🔪',  note:'Flynn\'s debut is still her most personal. Unnerving and brilliant.' },
+    { title:'Memories of My Melancholy Whores', author:'Gabriel García Márquez',emoji:'🌺', note:'Late GGM, early in style. Melancholy and beautiful as promised.' },
+    { title:'The World as I See It',         author:'Albert Einstein',         emoji:'🌌',  note:'Surprising warmth behind the intellect. Underlines on every page.' },
+    { title:'Every Heart a Doorway',         author:'Seanan McGuire',          emoji:'🚪',  note:'Portal fantasy meets found family. Read in one afternoon.' },
+    { title:'The Metamorphosis',             author:'Franz Kafka',             emoji:'🪲',  note:'Kafka\'s quiet horror of alienation — more relevant every decade.' },
+    { title:'The Pearl',                     author:'John Steinbeck',          emoji:'💎',  note:'Devastating and precise. Every sentence is doing something.' },
+    { title:'Finish What You Start',         author:'Peter Hollins',           emoji:'🏁',  note:'Practical and motivating. Read when stuck on a project.' },
+    { title:'Bhagavad Gita',                 author:'Ancient text',            emoji:'🕉️',  note:'Return to this regularly. Comfort and challenge in equal measure.' },
+    { title:'The Last Queen',                author:'Chitra Banerjee Divakaruni',emoji:'👑', note:'Historical fiction that stayed with me long after finishing.' },
+    { title:'Think Like a Monk',             author:'Jay Shetty',              emoji:'🧘',  note:'Genuinely changed some daily habits. Highlighted half the book.' },
+  ]
+};
 
-// Color stops for sky at each key hour
-const SKY_KEYFRAMES = [
-  // hour, skyTop, skyBottom, orbColor, orbGlow, horizonColor, castColor, overlayRGBA, leafColor
-  { h: 0,  skyTop: '#0a0d1a', skyBottom: '#0e1422', orb: '#d4d4f8', glow: 'rgba(180,180,255,0.25)', horizon: 'rgba(20,20,40,0)',   cast: 'rgba(0,0,0,0)',      overlay: 'rgba(5,8,22,0.6)',  leaf: '#2a4a24', stars: 1 },
-  { h: 4,  skyTop: '#0f1428', skyBottom: '#1a1e38', orb: '#d0d0f0', glow: 'rgba(160,160,240,0.2)', horizon: 'rgba(30,20,60,0)',   cast: 'rgba(0,0,0,0)',      overlay: 'rgba(8,10,28,0.5)', leaf: '#2a4a24', stars: 1 },
-  { h: 5,  skyTop: '#1e1a3a', skyBottom: '#3a2a5a', orb: '#e8c880', glow: 'rgba(230,180,80,0.3)',  horizon: 'rgba(100,60,120,0.3)',cast:'rgba(80,40,80,0.1)', overlay: 'rgba(20,10,40,0.35)',leaf: '#3a5e2e', stars: 0.4 },
-  { h: 6,  skyTop: '#c87830', skyBottom: '#f4a060', orb: '#ffd860', glow: 'rgba(255,200,80,0.6)',  horizon: 'rgba(255,140,60,0.5)',cast:'rgba(255,120,40,0.18)',overlay:'rgba(80,40,10,0.15)', leaf: '#4a7040', stars: 0 },
-  { h: 7,  skyTop: '#d4904a', skyBottom: '#f8c880', orb: '#ffe878', glow: 'rgba(255,220,100,0.5)', horizon: 'rgba(255,160,80,0.3)',cast:'rgba(255,150,60,0.12)',overlay:'rgba(40,20,5,0.08)', leaf: '#567842', stars: 0 },
-  { h: 8,  skyTop: '#7ab4d8', skyBottom: '#b8d8f0', orb: '#ffe480', glow: 'rgba(255,220,80,0.45)',horizon:'rgba(255,180,80,0.1)', cast:'rgba(255,200,80,0.07)',overlay:'rgba(0,0,0,0.02)',  leaf: '#5a8048', stars: 0 },
-  { h: 10, skyTop: '#5a9ec8', skyBottom: '#9acce8', orb: '#fff4a0', glow: 'rgba(255,240,140,0.4)',horizon:'rgba(255,200,80,0)',   cast:'rgba(255,220,100,0.05)',overlay:'rgba(0,0,0,0)',    leaf: '#5e8850', stars: 0 },
-  { h: 12, skyTop: '#3a88c8', skyBottom: '#7ab8e0', orb: '#fff8c0', glow: 'rgba(255,248,180,0.5)',horizon:'rgba(255,220,100,0)',  cast:'rgba(255,240,120,0.1)',overlay:'rgba(0,0,0,0)',     leaf: '#64904e', stars: 0 },
-  { h: 14, skyTop: '#4898cc', skyBottom: '#88c4e0', orb: '#fff8b8', glow: 'rgba(255,245,160,0.45)',horizon:'rgba(255,220,80,0)',  cast:'rgba(255,230,100,0.08)',overlay:'rgba(0,0,0,0)',   leaf: '#628c4c', stars: 0 },
-  { h: 16, skyTop: '#5090c0', skyBottom: '#90c0e0', orb: '#ffe880', glow: 'rgba(255,220,80,0.5)', horizon:'rgba(255,180,60,0.1)',cast:'rgba(255,180,60,0.08)',overlay:'rgba(0,0,0,0)',     leaf: '#5a8448', stars: 0 },
-  { h: 17, skyTop: '#c06828', skyBottom: '#e09050', orb: '#ffc040', glow: 'rgba(255,180,40,0.7)', horizon:'rgba(255,140,40,0.5)',cast:'rgba(255,130,30,0.2)', overlay:'rgba(30,10,5,0.08)', leaf: '#4a6e38', stars: 0 },
-  { h: 18, skyTop: '#a04020', skyBottom: '#d07040', orb: '#ff9820', glow: 'rgba(255,140,20,0.7)', horizon:'rgba(255,100,20,0.6)',cast:'rgba(255,100,20,0.28)',overlay:'rgba(40,15,5,0.15)', leaf: '#405830', stars: 0 },
-  { h: 19, skyTop: '#602818', skyBottom: '#a05030', orb: '#e07010', glow: 'rgba(220,100,10,0.6)', horizon:'rgba(200,70,10,0.6)', cast:'rgba(200,70,10,0.2)', overlay:'rgba(30,10,5,0.25)', leaf: '#384e2a', stars: 0 },
-  { h: 20, skyTop: '#2a1830', skyBottom: '#4a2840', orb: '#c06080', glow: 'rgba(180,80,100,0.4)', horizon:'rgba(100,40,60,0.3)', cast:'rgba(60,20,40,0.1)',  overlay:'rgba(20,8,25,0.35)', leaf: '#2e4024', stars: 0.3 },
-  { h: 21, skyTop: '#180e28', skyBottom: '#281838', orb: '#b8a0e0', glow: 'rgba(160,140,220,0.3)',horizon:'rgba(40,20,60,0.1)',  cast:'rgba(0,0,0,0)',        overlay:'rgba(12,6,20,0.45)', leaf: '#263620', stars: 0.7 },
-  { h: 22, skyTop: '#0e0a1e', skyBottom: '#160e28', orb: '#c0c0f0', glow: 'rgba(170,170,240,0.25)',horizon:'rgba(20,10,40,0)',  cast:'rgba(0,0,0,0)',        overlay:'rgba(6,4,16,0.55)', leaf: '#243020', stars: 0.9 },
-  { h: 23, skyTop: '#0a0814', skyBottom: '#0e0c1e', orb: '#c8c8f8', glow: 'rgba(180,180,255,0.22)',horizon:'rgba(10,8,25,0)',   cast:'rgba(0,0,0,0)',        overlay:'rgba(5,3,14,0.6)',  leaf: '#223020', stars: 1 },
+/* ─────────────────────────────────────────────
+   2. 24-HOUR SKY ENGINE
+───────────────────────────────────────────── */
+const SKY = [
+  { h:0,  sT:'#080b18',sB:'#0c1020',orb:'#c8c8f0',gl:'rgba(170,170,240,.2)',  hz:'rgba(10,10,30,0)',   cast:'rgba(0,0,0,0)',       tod:'rgba(4,6,18,.62)',  lf:'#223022', st:1   },
+  { h:4,  sT:'#0c1224',sB:'#181a36',orb:'#c0c0e8',gl:'rgba(155,155,230,.18)', hz:'rgba(20,15,50,0)',   cast:'rgba(0,0,0,0)',       tod:'rgba(6,8,24,.52)',  lf:'#243022', st:1   },
+  { h:5,  sT:'#1e1838',sB:'#362858',orb:'#e8c070',gl:'rgba(225,175,70,.3)',   hz:'rgba(90,50,110,.28)',cast:'rgba(70,30,70,.09)',   tod:'rgba(18,8,36,.34)', lf:'#365828', st:.4  },
+  { h:6,  sT:'#c07028',sB:'#f09858',orb:'#ffd458',gl:'rgba(255,195,70,.62)',  hz:'rgba(255,130,50,.5)',cast:'rgba(250,110,36,.18)', tod:'rgba(70,35,8,.14)', lf:'#486838', st:0   },
+  { h:7,  sT:'#c88840',sB:'#f8c070',orb:'#ffe470',gl:'rgba(255,215,90,.5)',   hz:'rgba(255,150,70,.28)',cast:'rgba(255,140,50,.1)', tod:'rgba(35,18,4,.07)', lf:'#528040', st:0   },
+  { h:8,  sT:'#70b0d8',sB:'#b0d8f0',orb:'#ffe07a',gl:'rgba(255,215,75,.45)', hz:'rgba(255,170,70,.1)',cast:'rgba(255,190,70,.07)', tod:'rgba(0,0,0,.02)',   lf:'#588448', st:0   },
+  { h:10, sT:'#52a0d0',sB:'#96ccea',orb:'#fff090',gl:'rgba(255,238,130,.4)', hz:'rgba(255,195,75,0)', cast:'rgba(255,215,90,.05)', tod:'rgba(0,0,0,0)',     lf:'#5e8c50', st:0   },
+  { h:12, sT:'#3488c8',sB:'#78b8e0',orb:'#fffab0',gl:'rgba(255,248,160,.48)',hz:'rgba(255,215,95,0)', cast:'rgba(255,235,110,.1)', tod:'rgba(0,0,0,0)',     lf:'#629050', st:0   },
+  { h:14, sT:'#4298cc',sB:'#86c4e0',orb:'#fff8b0',gl:'rgba(255,244,152,.45)',hz:'rgba(255,215,80,0)', cast:'rgba(255,225,95,.08)', tod:'rgba(0,0,0,0)',     lf:'#5e8c4c', st:0   },
+  { h:16, sT:'#4890c0',sB:'#8cc0e0',orb:'#ffe878',gl:'rgba(255,218,70,.5)',  hz:'rgba(255,175,55,.1)',cast:'rgba(255,172,50,.08)', tod:'rgba(0,0,0,0)',     lf:'#588448', st:0   },
+  { h:17, sT:'#c06028',sB:'#e08848',orb:'#ffc038',gl:'rgba(255,175,36,.7)',  hz:'rgba(255,130,36,.5)',cast:'rgba(255,120,28,.2)',  tod:'rgba(28,10,4,.07)', lf:'#486838', st:0   },
+  { h:18, sT:'#9c3e1e',sB:'#d06838',orb:'#ff9618',gl:'rgba(255,130,16,.7)',  hz:'rgba(255,90,18,.62)',cast:'rgba(252,90,16,.28)',  tod:'rgba(36,12,4,.14)', lf:'#3e5a2c', st:0   },
+  { h:19, sT:'#5c2614',sB:'#9c4c2a',orb:'#dc6c0c',gl:'rgba(215,95,8,.58)',   hz:'rgba(195,65,8,.58)', cast:'rgba(195,65,8,.18)',   tod:'rgba(28,9,4,.24)',  lf:'#344824', st:0   },
+  { h:20, sT:'#281630',sB:'#48263e',orb:'#b05878',gl:'rgba(172,75,96,.38)',  hz:'rgba(95,36,56,.28)', cast:'rgba(55,18,38,.1)',    tod:'rgba(18,6,24,.34)', lf:'#2c3c22', st:.3  },
+  { h:21, sT:'#160c26',sB:'#261636',orb:'#b098de',gl:'rgba(155,135,215,.28)',hz:'rgba(36,18,58,.1)',  cast:'rgba(0,0,0,0)',        tod:'rgba(10,5,18,.44)', lf:'#263820', st:.7  },
+  { h:22, sT:'#0c0a1e',sB:'#141028',orb:'#b8b8ee',gl:'rgba(163,163,235,.24)',hz:'rgba(16,10,38,0)',   cast:'rgba(0,0,0,0)',        tod:'rgba(5,3,14,.54)',  lf:'#223020', st:.9  },
+  { h:23, sT:'#08061a',sB:'#0c0a20',orb:'#c2c2f4',gl:'rgba(170,170,248,.22)',hz:'rgba(8,6,22,0)',     cast:'rgba(0,0,0,0)',        tod:'rgba(4,2,12,.60)',  lf:'#202e1e', st:1   },
 ];
 
-// Linear interpolation helper
-function lerp(a, b, t) { return a + (b - a) * t; }
+function lerp(a,b,t){return a+(b-a)*t}
+function parseH(hex){const n=parseInt(hex.replace('#',''),16);return{r:(n>>16)&255,g:(n>>8)&255,b:n&255}}
+function lerpH(a,b,t){const A=parseH(a),B=parseH(b);const r=Math.round(lerp(A.r,B.r,t)),g=Math.round(lerp(A.g,B.g,t)),bl=Math.round(lerp(A.b,B.b,t));return`#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${bl.toString(16).padStart(2,'0')}`}
+function parseRGBA(s){const m=s.match(/[\d.]+/g);return m?{r:+m[0],g:+m[1],b:+m[2],a:+m[3]}:{r:0,g:0,b:0,a:0}}
+function lerpRGBA(a,b,t){const A=parseRGBA(a),B=parseRGBA(b);return`rgba(${Math.round(lerp(A.r,B.r,t))},${Math.round(lerp(A.g,B.g,t))},${Math.round(lerp(A.b,B.b,t))},${parseFloat(lerp(A.a,B.a,t).toFixed(3))})`}
 
-// Parse rgba string to object {r,g,b,a}
-function parseRGBA(str) {
-  const m = str.match(/[\d.]+/g);
-  return m ? { r: +m[0], g: +m[1], b: +m[2], a: m[3] !== undefined ? +m[3] : 1 } : { r:0,g:0,b:0,a:0 };
-}
-
-// Parse hex to rgb object
-function parseHex(hex) {
-  const h = hex.replace('#', '');
-  const n = parseInt(h, 16);
-  return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
-}
-
-function hexLerp(hexA, hexB, t) {
-  const a = parseHex(hexA), b = parseHex(hexB);
-  const r = Math.round(lerp(a.r, b.r, t));
-  const g = Math.round(lerp(a.g, b.g, t));
-  const bl = Math.round(lerp(a.b, b.b, t));
-  return `#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${bl.toString(16).padStart(2,'0')}`;
-}
-
-function rgbaLerp(strA, strB, t) {
-  const a = parseRGBA(strA), b = parseRGBA(strB);
-  const r = Math.round(lerp(a.r, b.r, t));
-  const g = Math.round(lerp(a.g, b.g, t));
-  const bl = Math.round(lerp(a.b, b.b, t));
-  const al = parseFloat(lerp(a.a, b.a, t).toFixed(3));
-  return `rgba(${r},${g},${bl},${al})`;
-}
-
-// Get interpolated sky state for a given decimal hour (e.g. 14.5)
-function getSkyState(decimalHour) {
-  const keys = SKY_KEYFRAMES;
-  let lo = keys[keys.length - 1], hi = keys[0];
-
-  for (let i = 0; i < keys.length; i++) {
-    if (keys[i].h <= decimalHour) lo = keys[i];
-    if (keys[i].h > decimalHour) { hi = keys[i]; break; }
-  }
-
-  if (lo === hi) return lo;
-  const range = (hi.h - lo.h + 24) % 24 || 1;
-  const t = (decimalHour - lo.h + 24) % 24 / range;
-
-  return {
-    skyTop:   hexLerp(lo.skyTop, hi.skyTop, t),
-    skyBottom:hexLerp(lo.skyBottom, hi.skyBottom, t),
-    orb:      hexLerp(lo.orb, hi.orb, t),
-    glow:     rgbaLerp(lo.glow, hi.glow, t),
-    horizon:  rgbaLerp(lo.horizon, hi.horizon, t),
-    cast:     rgbaLerp(lo.cast, hi.cast, t),
-    overlay:  rgbaLerp(lo.overlay, hi.overlay, t),
-    leaf:     hexLerp(lo.leaf, hi.leaf, t),
-    stars:    lerp(lo.stars, hi.stars, t),
+function getSky(h){
+  const K=SKY;
+  let lo=K[K.length-1],hi=K[0];
+  for(let i=0;i<K.length;i++){if(K[i].h<=h)lo=K[i];if(K[i].h>h){hi=K[i];break}}
+  if(lo===hi)return lo;
+  const range=(hi.h-lo.h+24)%24||1;
+  const t=((h-lo.h+24)%24)/range;
+  return{
+    sT:lerpH(lo.sT,hi.sT,t),sB:lerpH(lo.sB,hi.sB,t),
+    orb:lerpH(lo.orb,hi.orb,t),gl:lerpRGBA(lo.gl,hi.gl,t),
+    hz:lerpRGBA(lo.hz,hi.hz,t),cast:lerpRGBA(lo.cast,hi.cast,t),
+    tod:lerpRGBA(lo.tod,hi.tod,t),lf:lerpH(lo.lf,hi.lf,t),
+    st:lerp(lo.st,hi.st,t)
   };
 }
 
-// Calculate sun/moon orb position on an arc across the scene
-// At sunrise (~6h) → left edge low; noon → center top; sunset (~18h) → right edge low
-// Night: moon arcs gently
-function getOrbPosition(decimalHour) {
-  // Map 6h–18h (day arc) onto progress 0→1
-  let progress, isNight = false;
-
-  if (decimalHour >= 5.5 && decimalHour <= 19) {
-    progress = (decimalHour - 5.5) / (19 - 5.5); // 0 (dawn) → 1 (dusk)
-  } else {
-    // Night arc 19h→5.5h next day
-    const nightTotal = (5.5 + 24 - 19);
-    const nightProgress = decimalHour >= 19
-      ? (decimalHour - 19) / nightTotal
-      : (decimalHour + 24 - 19) / nightTotal;
-    progress = nightProgress;
-    isNight = true;
+function orbPos(h){
+  let x,y;
+  if(h>=5.5&&h<=19.5){
+    const p=(h-5.5)/(19.5-5.5);
+    x=4+p*92;y=82-70*Math.sin(Math.PI*p);
+  }else{
+    const total=(5.5+24-19.5);
+    const p=h>=19.5?(h-19.5)/total:(h+24-19.5)/total;
+    x=4+p*92;y=78-36*Math.sin(Math.PI*p);
   }
-
-  // Parabolic arc: x goes 5%→95%, y peaks at ~10% (top)
-  const x = 5 + progress * 90; // percent across scene width
-  // Arc: y = 80 - 70 * sin(π * progress) meaning 80% at edges, 10% at peak
-  const y = isNight
-    ? 75 - 35 * Math.sin(Math.PI * progress) // shallower night arc
-    : 80 - 68 * Math.sin(Math.PI * progress);
-
-  return { x, y };
+  return{x,y};
 }
 
-let manualThemeOverride = false;
-let currentMode = 'light';
+let manualTheme=false;
+let currentTheme='light';
 
-function applyTimeOfDay(decimalHour) {
-  const state = getSkyState(decimalHour);
-  const orbPos = getOrbPosition(decimalHour);
-  const root = document.documentElement;
+function applyTime(h){
+  const s=getSky(h),pos=orbPos(h),root=document.documentElement;
+  root.style.setProperty('--sky-a',s.sT);
+  root.style.setProperty('--sky-b',s.sB);
+  root.style.setProperty('--orb-col',s.orb);
+  root.style.setProperty('--orb-glow',s.gl);
+  root.style.setProperty('--horizon-col',s.hz);
+  root.style.setProperty('--cast-col',s.cast);
+  root.style.setProperty('--tod-col',s.tod);
+  root.style.setProperty('--leaf-col',s.lf);
+  const orb=document.getElementById('sunOrb');
+  if(orb){orb.style.left=pos.x+'%';orb.style.top=pos.y+'%'}
+  const sw=document.getElementById('starsWrap');
+  if(sw)sw.style.opacity=s.st;
+  document.querySelectorAll('.cloud').forEach(c=>{c.style.opacity=s.st>.5?.14:.68});
+  if(!manualTheme)setTheme(h<6.5||h>20?'dark':'light',false);
+}
 
-  // Sky
-  root.style.setProperty('--sky-top', state.skyTop);
-  root.style.setProperty('--sky-bottom', state.skyBottom);
-  root.style.setProperty('--orb-color', state.orb);
-  root.style.setProperty('--orb-glow', state.glow);
-  root.style.setProperty('--horizon-color', state.horizon);
-  root.style.setProperty('--cast-color', state.cast);
-  root.style.setProperty('--leaf-color', state.leaf);
+function setTheme(mode,manual){
+  if(manual)manualTheme=true;
+  currentTheme=mode;
+  document.body.classList.toggle('dark',mode==='dark');
+  const icon=document.getElementById('themeIcon');
+  if(icon)icon.textContent=mode==='dark'?'☽':'☀';
+}
 
-  // Stars
-  const starsEl = document.querySelector('.stars-layer');
-  if (starsEl) starsEl.style.opacity = state.stars;
+function initEngine(){
+  function tick(){
+    const n=new Date();
+    applyTime(n.getHours()+n.getMinutes()/60+n.getSeconds()/3600);
+  }
+  tick();
+  setInterval(tick,60000);
+  window.setDebugHour=h=>{manualTheme=false;applyTime(h);console.log('[Engine] Hour:',h)};
+}
 
-  // Cloud visibility (less visible at night)
-  document.querySelectorAll('.cloud').forEach(c => {
-    c.style.opacity = state.stars > 0.5 ? 0.15 : 0.7;
+/* ─────────────────────────────────────────────
+   3. NAVBAR
+───────────────────────────────────────────── */
+function initNavbar(){
+  const nav=document.getElementById('navbar');
+  const burger=document.getElementById('burger');
+  const navList=document.getElementById('navList');
+  const toggle=document.getElementById('themeToggle');
+
+  window.addEventListener('scroll',()=>{nav.classList.toggle('scrolled',window.scrollY>40)},{passive:true});
+
+  burger&&burger.addEventListener('click',()=>{
+    const open=navList.classList.toggle('open');
+    burger.setAttribute('aria-expanded',open);
   });
 
-  // Orb position
-  const orbEl = document.querySelector('.sun-moon-orb');
-  if (orbEl) {
-    orbEl.style.left = `${orbPos.x}%`;
-    orbEl.style.top  = `${orbPos.y}%`;
-  }
-
-  // Time overlay on scene
-  const overlayEl = document.getElementById('timeOverlay');
-  if (overlayEl) overlayEl.style.background = state.overlay;
-
-  // Auto dark/light mode (unless user overrode)
-  if (!manualThemeOverride) {
-    const shouldBeDark = decimalHour < 6.5 || decimalHour > 20;
-    setTheme(shouldBeDark ? 'dark' : 'light', false);
-  }
-}
-
-function setTheme(mode, isManual) {
-  if (isManual) manualThemeOverride = true;
-  currentMode = mode;
-  document.body.classList.toggle('dark-mode', mode === 'dark');
-  const icon  = document.getElementById('toggleIcon');
-  const label = document.getElementById('toggleLabel');
-  if (icon)  icon.textContent  = mode === 'dark' ? '☽' : '☀';
-  if (label) label.textContent = mode === 'dark' ? 'Night' : 'Day';
-}
-
-// Real-time update loop
-function initTimeEngine() {
-  function tick() {
-    const now = new Date();
-    const decimalHour = now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600;
-    applyTimeOfDay(decimalHour);
-  }
-  tick(); // immediate first run
-  setInterval(tick, 60000); // update every minute
-}
-
-// Theme toggle button
-function initThemeToggle() {
-  const btn = document.getElementById('themeToggle');
-  if (!btn) return;
-  btn.addEventListener('click', () => {
-    const newMode = currentMode === 'dark' ? 'light' : 'dark';
-    setTheme(newMode, true);
-  });
-}
-
-
-/* ──────────────────────────────────────────────
-   2. SKILLS TAB SYSTEM
-   Accessible tab switching with keyboard nav
-────────────────────────────────────────────── */
-function initTabs() {
-  const tabs    = document.querySelectorAll('.tab-btn');
-  const panels  = document.querySelectorAll('.tab-panel');
-
-  if (!tabs.length) return;
-
-  function activateTab(btn) {
-    const target = btn.dataset.tab;
-
-    // Update buttons
-    tabs.forEach(t => {
-      t.classList.remove('active');
-      t.setAttribute('aria-selected', 'false');
-    });
-    btn.classList.add('active');
-    btn.setAttribute('aria-selected', 'true');
-
-    // Update panels with animation
-    panels.forEach(p => {
-      if (p.id === `tab-${target}`) {
-        p.classList.add('active');
-      } else {
-        p.classList.remove('active');
-      }
-    });
-  }
-
-  tabs.forEach(btn => {
-    btn.addEventListener('click', () => activateTab(btn));
-
-    // Keyboard navigation
-    btn.addEventListener('keydown', e => {
-      const list = Array.from(tabs);
-      const idx  = list.indexOf(btn);
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        e.preventDefault();
-        list[(idx + 1) % list.length].focus();
-      }
-      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        e.preventDefault();
-        list[(idx - 1 + list.length) % list.length].focus();
-      }
-    });
-  });
-}
-
-
-/* ──────────────────────────────────────────────
-   3. SCROLL-TRIGGERED REVEALS
-   Elements fade + slide in when entering viewport
-────────────────────────────────────────────── */
-function initScrollReveals() {
-  const targets = document.querySelectorAll(
-    '.project-card, .pub-card, .book-card, .skill-chip, .section-title, .header-text'
-  );
-
-  // Apply initial hidden state via inline style
-  targets.forEach((el, i) => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(24px)';
-    el.style.transition = `opacity 0.55s ease ${(i % 8) * 0.06}s, transform 0.55s ease ${(i % 8) * 0.06}s`;
+  // Close menu on link click
+  document.querySelectorAll('.nav-a').forEach(a=>{
+    a.addEventListener('click',()=>{navList.classList.remove('open');burger&&burger.setAttribute('aria-expanded','false')});
   });
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.opacity = '1';
-        entry.target.style.transform = 'translateY(0)';
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-
-  targets.forEach(el => observer.observe(el));
-}
-
-
-/* ──────────────────────────────────────────────
-   4. SMOOTH NAV HIGHLIGHT
-   Active section tracking via IntersectionObserver
-────────────────────────────────────────────── */
-function initNavHighlight() {
-  const navLinks = document.querySelectorAll('.header-nav a');
-  const sections = document.querySelectorAll('section[id], footer[id]');
-
-  if (!navLinks.length || !sections.length) return;
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const id = entry.target.id;
-        navLinks.forEach(a => {
-          a.style.color = a.getAttribute('href') === `#${id}`
-            ? 'var(--accent-gold)'
-            : '';
+  // Active link tracking
+  const sections=document.querySelectorAll('section[id],footer[id]');
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        document.querySelectorAll('.nav-a').forEach(a=>{
+          a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id);
         });
       }
     });
-  }, { threshold: 0.35 });
+  },{threshold:.35});
+  sections.forEach(s=>observer.observe(s));
 
-  sections.forEach(s => observer.observe(s));
+  toggle&&toggle.addEventListener('click',()=>setTheme(currentTheme==='dark'?'light':'dark',true));
 }
 
-
-/* ──────────────────────────────────────────────
-   5. CARD TILT EFFECT (subtle 3D on hover)
-   Tracks mouse within each project card
-────────────────────────────────────────────── */
-function initCardTilt() {
-  const cards = document.querySelectorAll('.project-card');
-
-  cards.forEach(card => {
-    card.addEventListener('mousemove', e => {
-      const rect   = card.getBoundingClientRect();
-      const cx     = rect.left + rect.width  / 2;
-      const cy     = rect.top  + rect.height / 2;
-      const dx     = (e.clientX - cx) / (rect.width  / 2);
-      const dy     = (e.clientY - cy) / (rect.height / 2);
-      const rotY   = dx * 5;   // ±5deg
-      const rotX   = dy * -5;
-      card.style.transform = `translateY(-4px) perspective(600px) rotateY(${rotY}deg) rotateX(${rotX}deg)`;
-    });
-
-    card.addEventListener('mouseleave', () => {
-      card.style.transform = '';
-    });
-  });
-}
-
-
-/* ──────────────────────────────────────────────
-   6. DYNAMIC SHADOW CASTER
-   A faint directional shadow overlay on content
-   area that shifts based on the sun position
-   (supplements the CSS window scene)
-────────────────────────────────────────────── */
-function initDynamicShadow() {
-  // We inject a pseudo-shadow via a fixed element behind content
-  const shadowEl = document.createElement('div');
-  shadowEl.id = 'dynamicShadow';
-  Object.assign(shadowEl.style, {
-    position: 'fixed',
-    pointerEvents: 'none',
-    zIndex: '0',
-    inset: '0',
-    transition: 'background 2s ease',
-  });
-  document.body.insertBefore(shadowEl, document.body.firstChild);
-
-  function updateShadow() {
-    const now = new Date();
-    const h   = now.getHours() + now.getMinutes() / 60;
-    const state = getSkyState(h);
-    const orbPos = getOrbPosition(h);
-
-    // Shadow comes from opposite direction of sun
-    const shadowAngle = orbPos.x / 100; // 0–1 (left to right sun)
-    // Cast a very subtle radial from the sun direction
-    const opacity = h >= 6 && h <= 19 ? 0.04 : 0;
-    const px = orbPos.x;
-    const py = orbPos.y * 0.4; // scaled since scene is partial width
-    shadowEl.style.background = `radial-gradient(ellipse at ${px}% ${py}%, rgba(255,200,80,${opacity * 0.6}) 0%, transparent 60%)`;
+/* ─────────────────────────────────────────────
+   4. TYPED HERO TEXT
+───────────────────────────────────────────── */
+function initTyped(){
+  const el=document.getElementById('typed');
+  if(!el)return;
+  const phrases=[
+    'Data Scientist.',
+    'ML Engineer.',
+    'Graph Neural Network Researcher.',
+    'Rail Infrastructure Analyst.',
+    'Infrastructure Data Engineer.',
+  ];
+  let pi=0,ci=0,deleting=false;
+  function tick(){
+    const phrase=phrases[pi];
+    el.textContent=deleting?phrase.slice(0,ci--):phrase.slice(0,ci++);
+    if(!deleting&&ci>phrase.length){setTimeout(()=>{deleting=true;tick()},1800);return}
+    if(deleting&&ci<0){deleting=false;pi=(pi+1)%phrases.length;ci=0;setTimeout(tick,400);return}
+    setTimeout(tick,deleting?55:85);
   }
-
-  updateShadow();
-  setInterval(updateShadow, 60000);
+  tick();
 }
 
-
-/* ──────────────────────────────────────────────
-   7. WINDOW SCENE PARALLAX (on desktop only)
-────────────────────────────────────────────── */
-function initParallax() {
-  if (window.innerWidth < 900) return;
-
-  const scene  = document.querySelector('.window-scene');
-  const plant  = document.querySelector('.plant-pot');
-  const clouds = document.querySelectorAll('.cloud');
-
-  window.addEventListener('scroll', () => {
-    const scrollY = window.scrollY;
-
-    if (scene) {
-      scene.style.transform = `translateY(${scrollY * 0.08}px)`;
-    }
-    clouds.forEach((c, i) => {
-      c.style.transform = `translateX(${Math.sin(scrollY * 0.005 + i) * 6}px)`;
-    });
-  }, { passive: true });
-}
-
-
-/* ──────────────────────────────────────────────
-   8. SKILL CHIP RIPPLE
-   Subtle ripple animation on click
-────────────────────────────────────────────── */
-function initChipRipple() {
-  document.querySelectorAll('.skill-chip').forEach(chip => {
-    chip.addEventListener('click', function(e) {
-      const rect   = this.getBoundingClientRect();
-      const x      = e.clientX - rect.left;
-      const y      = e.clientY - rect.top;
-      const ripple = document.createElement('span');
-      Object.assign(ripple.style, {
-        position: 'absolute',
-        left: `${x}px`,
-        top:  `${y}px`,
-        width: '0',
-        height: '0',
-        background: 'rgba(200, 150, 60, 0.25)',
-        borderRadius: '50%',
-        transform: 'translate(-50%, -50%)',
-        animation: 'rippleOut 0.5s ease-out forwards',
-        pointerEvents: 'none',
+/* ─────────────────────────────────────────────
+   5. TABS
+───────────────────────────────────────────── */
+function initTabs(){
+  document.querySelectorAll('.tab-bar').forEach(bar=>{
+    const btns=bar.querySelectorAll('.tab-btn');
+    const section=bar.closest('.glass-card,section');
+    btns.forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        btns.forEach(b=>{b.classList.remove('active');b.setAttribute('aria-selected','false')});
+        btn.classList.add('active');btn.setAttribute('aria-selected','true');
+        const target=btn.dataset.tab;
+        if(section){
+          section.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+          const pane=section.querySelector('#pane-'+target);
+          if(pane)pane.classList.add('active');
+        }
       });
-      this.style.position = 'relative';
-      this.style.overflow = 'hidden';
-      this.appendChild(ripple);
-      setTimeout(() => ripple.remove(), 500);
+      btn.addEventListener('keydown',e=>{
+        const list=[...btns],i=list.indexOf(btn);
+        if(e.key==='ArrowRight')list[(i+1)%list.length].focus();
+        if(e.key==='ArrowLeft')list[(i-1+list.length)%list.length].focus();
+      });
     });
   });
+}
 
-  // Inject ripple keyframe if not present
-  if (!document.getElementById('rippleStyle')) {
-    const style = document.createElement('style');
-    style.id = 'rippleStyle';
-    style.textContent = `
-      @keyframes rippleOut {
-        to { width: 150px; height: 150px; opacity: 0; }
+/* ─────────────────────────────────────────────
+   6. SCROLL REVEALS
+───────────────────────────────────────────── */
+function initReveals(){
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach((e,i)=>{
+      if(e.isIntersecting){
+        setTimeout(()=>e.target.classList.add('visible'),i*55);
+        obs.unobserve(e.target);
       }
-    `;
-    document.head.appendChild(style);
+    });
+  },{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+}
+
+/* ─────────────────────────────────────────────
+   7. BOOK LIBRARY
+───────────────────────────────────────────── */
+function initLibrary(){
+  function makeGrid(books,gridId,type){
+    const grid=document.getElementById(gridId);
+    if(!grid)return;
+    books.forEach(book=>{
+      const cover=document.createElement('div');
+      cover.className='book-cover reveal';
+      cover.setAttribute('role','button');
+      cover.setAttribute('tabindex','0');
+      cover.setAttribute('aria-label',book.title+' by '+book.author);
+      cover.innerHTML=`<span class="book-emoji">${book.emoji}</span><span class="book-short">${book.title}</span>`;
+      cover.addEventListener('click',()=>openModal(book,type));
+      cover.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openModal(book,type)}});
+      grid.appendChild(cover);
+    });
   }
+  makeGrid(BOOKS.pristine,'grid-pristine','pristine');
+  makeGrid(BOOKS.shabby,  'grid-shabby',  'shabby');
+  // Re-observe newly created reveal elements
+  initReveals();
 }
 
+/* ─────────────────────────────────────────────
+   8. MODAL
+───────────────────────────────────────────── */
+function openModal(book,type){
+  const overlay=document.getElementById('modalOverlay');
+  const cover=document.getElementById('modalCover');
+  const emoji=document.getElementById('modalEmoji');
+  const badge=document.getElementById('modalBadge');
+  const title=document.getElementById('modalTitle');
+  const author=document.getElementById('modalAuthor');
+  const note=document.getElementById('modalNote');
+  if(!overlay)return;
 
-/* ──────────────────────────────────────────────
-   9. FOOTER COPY-EMAIL
-   Click the contact button → copies email to clipboard
-   (while still navigating via mailto)
-────────────────────────────────────────────── */
-function initContactCopy() {
-  const btn = document.querySelector('.contact-btn');
-  if (!btn) return;
+  emoji.textContent=book.emoji;
+  badge.textContent=type==='pristine'?'✦ Pristine':'♦ Shabby';
+  badge.className='modal-badge '+(type==='pristine'?'pristine':'shabby');
+  title.textContent=book.title;
+  author.textContent=book.author;
+  note.textContent=book.note;
 
-  const email = btn.getAttribute('href').replace('mailto:', '');
+  const bg=type==='pristine'
+    ?'linear-gradient(135deg,#e8f5ec,#c8e8d0)'
+    :'linear-gradient(135deg,#f5ede0,#e8d4b8)';
+  cover.style.background=bg;
 
-  btn.addEventListener('click', e => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(email).catch(() => {});
-    }
-    // Flash feedback
-    const orig = btn.textContent;
-    btn.textContent = '✓ Email copied!';
-    btn.style.background = 'var(--accent-sage)';
-    setTimeout(() => {
-      btn.innerHTML = '<span>✉</span> Get in touch';
-      btn.style.background = '';
-    }, 2000);
+  overlay.classList.add('open');
+  document.body.style.overflow='hidden';
+  overlay.focus();
+}
+
+function closeModal(){
+  const overlay=document.getElementById('modalOverlay');
+  if(overlay)overlay.classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function initModal(){
+  document.getElementById('modalClose')?.addEventListener('click',closeModal);
+  document.getElementById('modalOverlay')?.addEventListener('click',e=>{
+    if(e.target===document.getElementById('modalOverlay'))closeModal();
+  });
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+}
+
+/* ─────────────────────────────────────────────
+   9. PROJECT CARD TILT
+───────────────────────────────────────────── */
+function initTilt(){
+  document.querySelectorAll('.proj-card').forEach(card=>{
+    card.addEventListener('mousemove',e=>{
+      const r=card.getBoundingClientRect();
+      const dx=(e.clientX-r.left-r.width/2)/(r.width/2);
+      const dy=(e.clientY-r.top-r.height/2)/(r.height/2);
+      card.style.transform=`translateY(-4px) perspective(600px) rotateY(${dx*6}deg) rotateX(${dy*-5}deg)`;
+    });
+    card.addEventListener('mouseleave',()=>{card.style.transform=''});
   });
 }
 
+/* ─────────────────────────────────────────────
+   10. PARALLAX ON SCROLL
+───────────────────────────────────────────── */
+function initParallax(){
+  if(window.innerWidth<900)return;
+  const orb=document.getElementById('sunOrb');
+  const clouds=document.querySelectorAll('.cloud');
+  window.addEventListener('scroll',()=>{
+    const sy=window.scrollY;
+    if(orb)orb.style.marginTop=sy*.04+'px';
+    clouds.forEach((c,i)=>{c.style.transform=`translateX(${Math.sin(sy*.006+i)*8}px)`});
+  },{passive:true});
+}
 
-/* ──────────────────────────────────────────────
-   10. READING CARDS — hover glow matching spine
-────────────────────────────────────────────── */
-function initBookGlow() {
-  document.querySelectorAll('.book-card').forEach(card => {
-    const spine  = card.querySelector('.book-spine');
-    if (!spine) return;
-    const color = getComputedStyle(spine).getPropertyValue('--spine-color').trim();
-    if (!color) return;
-
-    card.addEventListener('mouseenter', () => {
-      card.style.boxShadow = `0 8px 32px ${color}30, 0 2px 8px ${color}20`;
-      card.style.borderColor = `${color}50`;
-    });
-    card.addEventListener('mouseleave', () => {
-      card.style.boxShadow = '';
-      card.style.borderColor = '';
+/* ─────────────────────────────────────────────
+   11. SMOOTH SCROLL HIJACK (for older Safari)
+───────────────────────────────────────────── */
+function initSmoothScroll(){
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click',e=>{
+      const target=document.querySelector(a.getAttribute('href'));
+      if(target){e.preventDefault();target.scrollIntoView({behavior:'smooth',block:'start'})}
     });
   });
 }
 
-
-/* ──────────────────────────────────────────────
-   INIT — Wire everything up on DOMContentLoaded
-────────────────────────────────────────────── */
-document.addEventListener('DOMContentLoaded', () => {
-  initTimeEngine();
-  initThemeToggle();
+/* ─────────────────────────────────────────────
+   INIT
+───────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded',()=>{
+  initEngine();
+  initNavbar();
+  initTyped();
   initTabs();
-  initScrollReveals();
-  initNavHighlight();
-  initCardTilt();
-  initDynamicShadow();
+  initLibrary();   // must come before initReveals to stamp reveal classes
+  initReveals();
+  initModal();
+  initTilt();
   initParallax();
-  initChipRipple();
-  initContactCopy();
-  initBookGlow();
+  initSmoothScroll();
 
-  // Debug helper: expose time override in console for testing
-  // Usage: setDebugHour(18.5) → simulates 6:30 PM sunset
-  window.setDebugHour = function(h) {
-    manualThemeOverride = false;
-    applyTimeOfDay(h);
-    console.log(`[Shadow Engine] Simulating ${h}h`);
-  };
-
-  console.log(
-    '%c🌅 Shadow Engine Active',
-    'color: #c8963c; font-size: 13px; font-weight: 600;'
-  );
-  console.log(
-    '%cTip: setDebugHour(6) to test dawn · setDebugHour(18) for sunset · setDebugHour(0) for midnight',
-    'color: #8a8078; font-size: 11px;'
-  );
+  console.log('%c🌅 Shadow Engine Active','color:#c8903a;font-weight:600;font-size:13px');
+  console.log('%csetDebugHour(6) → dawn · setDebugHour(18) → sunset · setDebugHour(0) → midnight','color:#7a7470;font-size:11px');
 });
