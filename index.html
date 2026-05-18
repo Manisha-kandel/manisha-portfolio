@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manisha Kandel — Data Science & ML</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════
+       WINDOW SCENE  — pure CSS art, no images
+  ════════════════════════════════════════════════ -->
+  <div class="window-scene" aria-hidden="true">
+    <div class="sky-layer"></div>
+    <div class="sun-moon-orb"></div>
+    <div class="horizon-glow"></div>
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2"></div>
+    <div class="cloud cloud-3"></div>
+    <div class="stars-layer">
+      <div class="star" style="top:8%;left:12%;animation-delay:0s"></div>
+      <div class="star" style="top:15%;left:35%;animation-delay:0.7s"></div>
+      <div class="star" style="top:5%;left:60%;animation-delay:1.4s"></div>
+      <div class="star" style="top:20%;left:80%;animation-delay:0.3s"></div>
+      <div class="star" style="top:12%;left:92%;animation-delay:1.1s"></div>
+      <div class="star" style="top:30%;left:55%;animation-delay:0.5s"></div>
+      <div class="star" style="top:25%;left:22%;animation-delay:1.8s"></div>
+    </div>
+
+    <!-- Window frame -->
+    <div class="window-frame">
+      <div class="window-sill"></div>
+      <div class="window-cross-h"></div>
+      <div class="window-cross-v"></div>
+    </div>
+
+    <!-- Interior room -->
+    <div class="room-interior">
+      <!-- Table with plant -->
+      <div class="table-surface">
+        <div class="plant-pot">
+          <div class="pot-body"></div>
+          <div class="pot-saucer"></div>
+          <div class="stem stem-main"></div>
+          <div class="leaf leaf-1"></div>
+          <div class="leaf leaf-2"></div>
+          <div class="leaf leaf-3"></div>
+          <div class="leaf leaf-4"></div>
+          <div class="leaf leaf-5"></div>
+        </div>
+        <div class="table-book"></div>
+        <div class="table-mug"></div>
+      </div>
+    </div>
+
+    <!-- Sun/dusk overlay cast onto room -->
+    <div class="sun-cast-overlay"></div>
+    <!-- Global time-of-day overlay -->
+    <div class="time-overlay" id="timeOverlay"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       THEME TOGGLE
+  ════════════════════════════════════════════════ -->
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">
+    <span class="toggle-icon" id="toggleIcon">☀</span>
+    <span class="toggle-label" id="toggleLabel">Day</span>
+  </button>
+
+  <!-- ═══════════════════════════════════════════════
+       MAIN CONTENT
+  ════════════════════════════════════════════════ -->
+  <main class="site-content" id="siteContent">
+
+    <!-- ─── HEADER ─── -->
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="header-text">
+          <h1 class="site-name">Manisha Kandel</h1>
+          <p class="site-subtitle">Data Science &nbsp;·&nbsp; Machine Learning &nbsp;·&nbsp; Infrastructure Analytics</p>
+          <p class="site-tagline">Building intelligent systems where data meets the real world.</p>
+        </div>
+        <nav class="header-nav" aria-label="Site navigation">
+          <a href="#skills">Skills</a>
+          <a href="#projects">Projects</a>
+          <a href="#publications">Research</a>
+          <a href="#reading">Reading</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- ─── SKILLS ─── -->
+    <section class="section" id="skills">
+      <div class="section-inner">
+        <div class="section-label">01</div>
+        <h2 class="section-title">Skills &amp; Technologies</h2>
+
+        <div class="tabs-wrapper" role="tablist" aria-label="Skill categories">
+          <button class="tab-btn active" role="tab" aria-selected="true" data-tab="core">
+            Core Engineering &amp; Languages
+          </button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-tab="ml">
+            ML &amp; Advanced Analytics
+          </button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-tab="infra">
+            Data Engineering &amp; Infrastructure
+          </button>
+        </div>
+
+        <div class="tab-panels">
+          <div class="tab-panel active" id="tab-core" role="tabpanel">
+            <div class="skill-grid">
+              <div class="skill-chip">
+                <span class="skill-icon">🐍</span>
+                <span>Python</span>
+              </div>
+              <div class="skill-chip">
+                <span class="skill-icon">🗄</span>
+                <span>SQL</span>
+              </div>
+              <div class="skill-chip">
+                <span class="skill-icon">📊</span>
+                <span>R</span>
+              </div>
+              <div class="skill-chip">
+                <span class="skill-icon">🔷</span>
+                <span>Advanced Data Structures</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="tab-ml" role="tabpanel">
+            <div class="skill-grid">
+              <div class="skill-chip">
+                <span class="skill-icon">🔥</span>
+                <span>PyTorch</span>
+              </div>
+              <div class="skill-chip">
+                <span class="skill-icon">🕸</span>
+                <span>PyTorch Geometric</span>
+              </div>
+              <div class="skill-chip">
+                <span class="skill-icon">⚙</span>
+                <span>Scikit-learn</span>
+              </div>
+              <div class="skill-chip">
+                <span class="skill-icon">🌿</span>
+                <span>XGBoost</span>
+              </div>
+              <div class="skill-chip">
+                <span class="skill-icon">🕷</span>
+                <span>NetworkX</span>
+              </div>
+              <div class="skill-chip">
+                <span class="skill-icon">🔺</span>
+                <span>Graph Neural Networks</span>
+              </div>
+              <div class="skill-chip">
+                <span class="skill-icon">🌐</span>
+                <span>Spatiotemporal Modeling</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="tab-infra" role="tabpanel">
+            <div class="skill-grid">
+              <div class="skill-chip">
+                <span class="skill-icon">🐳</span>
+                <span>Docker</span>
+              </div>
+              <div class="skill-chip">
+                <span class="skill-icon">🌬</span>
+                <span>Apache Airflow</span>
+              </div>
+              <div class="skill-chip">
+                <span class="skill-icon">📡</span>
+                <span>Apache Kafka</span>
+              </div>
+              <div class="skill-chip">
+                <span class="skill-icon">⚡</span>
+                <span>Apache Spark</span>
+              </div>
+              <div class="skill-chip">
+                <span class="skill-icon">🔀</span>
+                <span>Git</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── PROJECTS ─── -->
+    <section class="section section-alt" id="projects">
+      <div class="section-inner">
+        <div class="section-label">02</div>
+        <h2 class="section-title">Projects</h2>
+
+        <div class="card-grid">
+
+          <article class="project-card">
+            <div class="card-accent accent-rail"></div>
+            <div class="card-body">
+              <div class="card-tags">
+                <span class="tag tag-infra">Kafka</span>
+                <span class="tag tag-infra">Docker</span>
+                <span class="tag tag-ml">Event Simulation</span>
+              </div>
+              <h3 class="card-title">Rail Signal State Optimization System</h3>
+              <p class="card-desc">
+                Real-time event simulation pipeline leveraging locally containerized Kafka brokers. Implements automated track-state validation with sub-millisecond latency, modeling signal transitions across complex rail network topologies.
+              </p>
+              <ul class="card-highlights">
+                <li>Containerized multi-broker Kafka cluster via Docker Compose</li>
+                <li>Automated validation of track-state transition correctness</li>
+                <li>Configurable simulation speed for stress &amp; regression testing</li>
+              </ul>
+              <div class="card-footer">
+                <span class="card-domain">🚂 Rail Infrastructure</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="project-card">
+            <div class="card-accent accent-dash"></div>
+            <div class="card-body">
+              <div class="card-tags">
+                <span class="tag tag-ml">Streamlit</span>
+                <span class="tag tag-infra">Real-time</span>
+                <span class="tag tag-core">Python</span>
+              </div>
+              <h3 class="card-title">Streamlit Telemetry Dashboard</h3>
+              <p class="card-desc">
+                Low-latency interactive state visualizer for dynamic track configurations. Maps live telemetry streams to an intuitive graphical interface, surfacing anomalies and configuration drifts in real time.
+              </p>
+              <ul class="card-highlights">
+                <li>Sub-second refresh for live track configuration states</li>
+                <li>Interactive topology map with drill-down capability</li>
+                <li>Threshold alerting with color-coded signal states</li>
+              </ul>
+              <div class="card-footer">
+                <span class="card-domain">📡 Data Visualization</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="project-card">
+            <div class="card-accent accent-wine"></div>
+            <div class="card-body">
+              <div class="card-tags">
+                <span class="tag tag-ml">Scikit-learn</span>
+                <span class="tag tag-ml">XGBoost</span>
+                <span class="tag tag-core">Statistics</span>
+              </div>
+              <h3 class="card-title">Wine Ordinal Analysis</h3>
+              <p class="card-desc">
+                Statistical modeling pipeline for ordinal classification of wine quality. Benchmarks proportional-odds regression against gradient-boosted ensemble architectures, with full feature-importance explainability.
+              </p>
+              <ul class="card-highlights">
+                <li>Ordinal classification with proportional-odds models</li>
+                <li>XGBoost ensemble comparison with SHAP explainability</li>
+                <li>Cross-validated performance across 11 physicochemical features</li>
+              </ul>
+              <div class="card-footer">
+                <span class="card-domain">🍷 Statistical ML</span>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── PUBLICATIONS ─── -->
+    <section class="section" id="publications">
+      <div class="section-inner">
+        <div class="section-label">03</div>
+        <h2 class="section-title">Research &amp; Publications</h2>
+
+        <div class="pub-list">
+
+          <article class="pub-card">
+            <div class="pub-meta">
+              <span class="pub-year">2024</span>
+              <span class="pub-type">Conference Paper</span>
+            </div>
+            <div class="pub-content">
+              <h3 class="pub-title">
+                Graph-Structured Analysis of Grade Crossing Inventory Systems for Freight Rail Safety
+              </h3>
+              <p class="pub-authors">Kandel, M. et al.</p>
+              <p class="pub-abstract">
+                Applies Graph Neural Network architectures to the Federal Grade Crossing Inventory System (GCIS) dataset,
+                modeling grade crossings as nodes within the broader freight rail network graph. The research identifies
+                structural vulnerability patterns and predictive risk indicators across thousands of at-grade intersections,
+                enabling data-driven prioritization of safety interventions in national rail infrastructure.
+              </p>
+              <div class="pub-tags">
+                <span class="tag tag-ml">GNN</span>
+                <span class="tag tag-ml">Graph Analysis</span>
+                <span class="tag tag-infra">Rail Safety</span>
+                <span class="tag tag-core">GCIS</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="pub-card">
+            <div class="pub-meta">
+              <span class="pub-year">2023</span>
+              <span class="pub-type">Working Paper</span>
+            </div>
+            <div class="pub-content">
+              <h3 class="pub-title">
+                Spatiotemporal Patterns in Freight Rail Network Disruptions: A GNN Approach
+              </h3>
+              <p class="pub-authors">Kandel, M. et al.</p>
+              <p class="pub-abstract">
+                Investigates spatiotemporal propagation of disruptions across the U.S. freight rail network using
+                PyTorch Geometric. Constructs a dynamic graph representation of track segments and junction nodes,
+                applying temporal GNN layers to learn how localized failures cascade through interconnected
+                rail corridors over time.
+              </p>
+              <div class="pub-tags">
+                <span class="tag tag-ml">Spatiotemporal</span>
+                <span class="tag tag-ml">PyTorch Geometric</span>
+                <span class="tag tag-infra">Freight Networks</span>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── READING LIST ─── -->
+    <section class="section section-alt" id="reading">
+      <div class="section-inner">
+        <div class="section-label">04</div>
+        <h2 class="section-title">Relax Library</h2>
+        <p class="section-subtitle">Books that live outside the terminal — and inside my head.</p>
+
+        <div class="card-grid reading-grid">
+
+          <article class="book-card">
+            <div class="book-spine" style="--spine-color: #4a7c59;"></div>
+            <div class="book-body">
+              <span class="book-tag tag-minty">
+                <span class="tag-dot"></span>Minty Fresh
+              </span>
+              <h3 class="book-title">Thinking, Fast and Slow</h3>
+              <p class="book-author">Daniel Kahneman</p>
+              <p class="book-note">Rethinking how intuition and data interact — mandatory reading alongside any ML work.</p>
+            </div>
+          </article>
+
+          <article class="book-card">
+            <div class="book-spine" style="--spine-color: #8b5e3c;"></div>
+            <div class="book-body">
+              <span class="book-tag tag-saggy">
+                <span class="tag-dot"></span>Saggy Pages
+              </span>
+              <h3 class="book-title">The Design of Everyday Things</h3>
+              <p class="book-author">Don Norman</p>
+              <p class="book-note">Dog-eared and annotated. Permanently changed how I think about interfaces and affordances.</p>
+            </div>
+          </article>
+
+          <article class="book-card">
+            <div class="book-spine" style="--spine-color: #5a7ba8;"></div>
+            <div class="book-body">
+              <span class="book-tag tag-minty">
+                <span class="tag-dot"></span>Minty Fresh
+              </span>
+              <h3 class="book-title">The Invisible Life of Addie LaRue</h3>
+              <p class="book-author">V.E. Schwab</p>
+              <p class="book-note">What does it mean to leave a mark? Currently about halfway through.</p>
+            </div>
+          </article>
+
+          <article class="book-card">
+            <div class="book-spine" style="--spine-color: #7a5c8a;"></div>
+            <div class="book-body">
+              <span class="book-tag tag-saggy">
+                <span class="tag-dot"></span>Saggy Pages
+              </span>
+              <h3 class="book-title">Sapiens</h3>
+              <p class="book-author">Yuval Noah Harari</p>
+              <p class="book-note">Read twice, gifted to three people. Still finds its way into conference discussions somehow.</p>
+            </div>
+          </article>
+
+          <article class="book-card">
+            <div class="book-spine" style="--spine-color: #3d7a6e;"></div>
+            <div class="book-body">
+              <span class="book-tag tag-minty">
+                <span class="tag-dot"></span>Minty Fresh
+              </span>
+              <h3 class="book-title">The Pragmatic Programmer</h3>
+              <p class="book-author">Hunt &amp; Thomas</p>
+              <p class="book-note">On the to-do stack — a classic I keep meaning to read properly front to back.</p>
+            </div>
+          </article>
+
+          <article class="book-card">
+            <div class="book-spine" style="--spine-color: #a05a2c;"></div>
+            <div class="book-body">
+              <span class="book-tag tag-saggy">
+                <span class="tag-dot"></span>Saggy Pages
+              </span>
+              <h3 class="book-title">Norwegian Wood</h3>
+              <p class="book-author">Haruki Murakami</p>
+              <p class="book-note">A deeply personal favourite. The kind of book that feels different every time you return.</p>
+            </div>
+          </article>
+
+        </div>
+
+        <div class="tag-legend" aria-label="Reading tag legend">
+          <div class="legend-item">
+            <span class="book-tag tag-minty"><span class="tag-dot"></span>Minty Fresh</span>
+            <span class="legend-desc">On the active to-do list or freshly started</span>
+          </div>
+          <div class="legend-item">
+            <span class="book-tag tag-saggy"><span class="tag-dot"></span>Saggy Pages</span>
+            <span class="legend-desc">Well-loved physical copy, read multiple times</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── CONTACT ─── -->
+    <footer class="site-footer" id="contact">
+      <div class="footer-inner">
+        <div class="footer-scene" aria-hidden="true">
+          <div class="footer-orb"></div>
+        </div>
+        <h2 class="footer-heading">Let's build something together.</h2>
+        <p class="footer-sub">Open to research collaborations, infrastructure roles, and ML engineering positions.</p>
+        <a href="mailto:manishakandel@example.com" class="contact-btn">
+          <span>✉</span> Get in touch
+        </a>
+        <div class="footer-links">
+          <a href="https://github.com/" target="_blank" rel="noopener" class="footer-link">GitHub</a>
+          <a href="https://linkedin.com/" target="_blank" rel="noopener" class="footer-link">LinkedIn</a>
+          <a href="https://scholar.google.com/" target="_blank" rel="noopener" class="footer-link">Google Scholar</a>
+        </div>
+        <p class="footer-copy">© 2025 Manisha Kandel. Made with CSS, coffee, and curiosity.</p>
+      </div>
+    </footer>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
